@@ -1,7 +1,7 @@
 import { AsyncQueue } from "@sapphire/async-queue";
 import type { Client } from "../Client";
 import { Request } from "./Request";
-import type { Response, RequestOptions, Json, RequestMethod } from "../types";
+import type { Response, RequestOptions, RequestMethod } from "../types";
 
 /**
  * A class representing a REST handler
@@ -28,7 +28,7 @@ export class Rest {
 	 * @param options - The options of the request
 	 * @returns - The response of the request
 	 */
-	get<T>(options: RequestOptions): Promise<T> {
+	get(options: Omit<RequestOptions, "client">): Promise<Response> {
 		return this.request("GET", options);
 	}
 
@@ -37,7 +37,7 @@ export class Rest {
 	 * @param options - The options of the request
 	 * @returns - The response of the request
 	 */
-	post<T>(options: RequestOptions): Promise<T> {
+	post(options: Omit<RequestOptions, "client">): Promise<Response> {
 		return this.request("POST", options);
 	}
 
@@ -46,19 +46,20 @@ export class Rest {
 	 * @param method - The method of the request
 	 * @param options - The options of the request
 	 */
-	request<T = Json | null>(
+	request(
 		method: "GET",
-		options: Omit<RequestOptions, "body">
-	): Promise<T>;
-	request<T = Json | null>(
+		options: Omit<RequestOptions, "body" | "client">
+	): Promise<Response>;
+	request(
 		method: Exclude<RequestMethod, "GET">,
-		options: RequestOptions
-	): Promise<T>;
+		options: Omit<RequestOptions, "client">
+	): Promise<Response>;
 	async request(
 		method: RequestMethod,
-		options: RequestOptions
+		options: Omit<RequestOptions, "client">
 	): Promise<Response> {
 		return new Request(method, {
+			client: this.client,
 			...options,
 		}).send();
 	}

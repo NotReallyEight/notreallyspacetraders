@@ -3,6 +3,13 @@ import type { Client } from "./Client";
 import type { Request } from "./rest/Request";
 
 /**
+ * Represents the status of the REST
+ */
+export interface GameStatus {
+	status: string;
+}
+
+/**
  * A JSON object
  */
 export type Json = Json[] | boolean | number | string | { [key: string]: Json };

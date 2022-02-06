@@ -19,7 +19,7 @@ export class Request {
 	/**
 	 * The headers of the request
 	 */
-	headers?: OutgoingHttpHeaders;
+	headers: OutgoingHttpHeaders;
 	/**
 	 * The method of the request
 	 */
@@ -41,7 +41,10 @@ export class Request {
 	 * @param options - The options of the request
 	 */
 	constructor(method: RequestMethod, options: RequestOptions) {
-		this.headers = options.headers;
+		this.headers = {
+			...options.headers,
+			"Content-Type": "application/json",
+		};
 		this.method = method;
 		this.url = options.url;
 		this.client = options.client;
