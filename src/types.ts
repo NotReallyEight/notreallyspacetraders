@@ -3,6 +3,15 @@ import type { Client } from "./Client";
 import type { Request } from "./rest/Request";
 
 /**
+ * The response to the claim username request
+ */
+export interface ClaimUsernameResponse {
+	type: "success";
+	token: string;
+	user: User;
+}
+
+/**
  * Represents the status of the REST
  */
 export interface GameStatus {
@@ -22,6 +31,17 @@ export enum Reference {
 	 * The base URL of the REST API
 	 */
 	baseUrl = "api.spacetraders.io",
+}
+
+/**
+ * The error of a request
+ */
+export interface RequestError {
+	type: "error";
+	error: {
+		code: number;
+		message: string;
+	};
 }
 
 /**
@@ -84,4 +104,14 @@ export interface Response {
 	 * The status code of the response
 	 */
 	statusCode: number;
+}
+
+/**
+ * A user in the REST API
+ */
+export interface User {
+	username: string;
+	credits: number;
+	ships: any[];
+	loans: any[];
 }
