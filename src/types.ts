@@ -3,6 +3,11 @@ import type { Client } from "./Client";
 import type { Request } from "./rest/Request";
 
 /**
+ * A JSON object
+ */
+export type Json = Json[] | boolean | number | string | { [key: string]: Json };
+
+/**
  * A reference to a REST resource
  */
 export enum Reference {
@@ -13,9 +18,18 @@ export enum Reference {
 }
 
 /**
+ * The method of a request
+ */
+export type RequestMethod = "DELETE" | "GET" | "POST" | "PUT";
+
+/**
  * The options of a request
  */
 export interface RequestOptions {
+	/**
+	 * The body of a request
+	 */
+	body?: Json;
 	/**
 	 * The client that instantiated the request
 	 */
@@ -24,10 +38,6 @@ export interface RequestOptions {
 	 * The headers of the request
 	 */
 	headers?: OutgoingHttpHeaders;
-	/**
-	 * The method of the request
-	 */
-	method: "DELETE" | "GET" | "POST" | "PUT";
 	/**
 	 * The URL of the request
 	 */

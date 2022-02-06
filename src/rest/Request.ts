@@ -1,13 +1,17 @@
 import type { OutgoingHttpHeaders } from "http2";
 import { request } from "https";
 import type { Client } from "../Client";
-import type { RequestOptions, Response } from "../types";
+import type { Json, RequestMethod, RequestOptions, Response } from "../types";
 import { RequestStatus, Reference } from "../types";
 
 /**
  * A request to the REST API
  */
 export class Request {
+	/**
+	 * The body of the request
+	 */
+	body?: Json;
 	/**
 	 * The client that instantiated the request
 	 */
@@ -19,7 +23,7 @@ export class Request {
 	/**
 	 * The method of the request
 	 */
-	method: "DELETE" | "GET" | "POST" | "PUT";
+	method: RequestMethod;
 	/**
 	 * The status of the request
 	 */
@@ -36,11 +40,12 @@ export class Request {
 	 *
 	 * @param options - The options of the request
 	 */
-	constructor({ client, headers, method, url }: RequestOptions) {
-		this.headers = headers;
+	constructor(method: RequestMethod, options: RequestOptions) {
+		this.headers = options.headers;
 		this.method = method;
-		this.url = url;
-		this.client = client;
+		this.url = options.url;
+		this.client = options.client;
+		this.body = options.body;
 	}
 
 	/**
@@ -51,14 +56,15 @@ export class Request {
 		await this.client.rest.queue.wait();
 
 		try {
-			if (this.method === "GET") this.headers = undefined;
+			if (this.method === "GET" && this.body !== undefined)
+				throw new Error("GET requests cannot have a body.");
 
 			return await new Promise<Response>((resolve, reject) => {
 				this.status = RequestStatus.InProgress;
 				this.handleRequest(resolve, reject);
 			});
 		} catch (err) {
-			throw new Error(`${(err as Error).name}: ${(err as Error).message}`);
+			throw new Error((err as Error).message);
 		} finally {
 			this.client.rest.queue.shift();
 		}
@@ -78,7 +84,7 @@ export class Request {
 			{
 				path: this.url.startsWith("/") ? this.url : `/${this.url}`,
 				hostname: Reference.baseUrl,
-				method: "GET",
+				method: this.method,
 			},
 			(res) => {
 				res.on("data", (d: string) => {
@@ -108,6 +114,8 @@ export class Request {
 			reject(new Error(`${err.name}: ${err.message}`));
 			this.status = RequestStatus.Failed;
 		});
+
+		if (this.body !== undefined) req.write(JSON.stringify(this.body));
 
 		req.end();
 	}
