@@ -1,4 +1,3 @@
-import EventEmitter from "node:events";
 import { Rest } from "./rest/Rest";
 import type {
 	ClaimUsernameResponse,
@@ -12,7 +11,7 @@ import type {
 /**
  * The client class
  */
-export class Client extends EventEmitter {
+export class Client {
 	token?: string;
 	/**
 	 * The REST handler of the client
@@ -23,7 +22,6 @@ export class Client extends EventEmitter {
 	 * @param options - The options of the client
 	 */
 	constructor(options: ClientOptions) {
-		super();
 		this.token = options.token;
 		this.rest = new Rest(this);
 	}
