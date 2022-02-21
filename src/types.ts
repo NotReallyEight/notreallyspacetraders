@@ -3,19 +3,95 @@ import type { Client } from "./Client";
 import type { Request } from "./rest/Request";
 
 /**
- * The response to the claim username request
+ * The options for the client class
  */
-export interface ClaimUsernameResponse {
-	type: "success";
-	token: string;
-	user: User;
+export interface ClientOptions {
+	/**
+	 * The token of the client
+	 */
+	token?: string;
 }
 
 /**
- * Represents the status of the REST
+ * The response to the claim username request
+ */
+export interface ClaimUsernameResponse {
+	/**
+	 * The token of the user
+	 */
+	token: string;
+	/**
+	 * The user information for the username claimed
+	 */
+	user: ClaimedUsernameUser;
+}
+
+/**
+ * A user in the REST API
+ */
+export interface ClaimedUsernameUser {
+	/**
+	 * The username of the user
+	 */
+	username: string;
+	/**
+	 * The number of credits of the user
+	 */
+	credits: number;
+	/**
+	 * The ships of the user
+	 */
+	ships: any[];
+	/**
+	 * The loans of the user
+	 */
+	loans: any[];
+}
+
+/**
+ * Represents the response to the gameStatus endpoint of the REST API
  */
 export interface GameStatus {
+	/**
+	 * The status of the REST API
+	 */
 	status: string;
+}
+
+/**
+ * The response to a getUser endpoint request
+ */
+export interface GetUser {
+	/**
+	 * The user in a getUser endpoint request's user property
+	 */
+	user: GetUserUser;
+}
+
+/**
+ * The user in a getUser endpoint request's user property
+ */
+export interface GetUserUser {
+	/**
+	 * The number of credits of the user
+	 */
+	credits: number;
+	/**
+	 * The date the user joined the game in ISO format
+	 */
+	joinedAt: string;
+	/**
+	 * The number of ships the user owns
+	 */
+	shipCount: number;
+	/**
+	 * The number of structures the user owns
+	 */
+	structureCount: number;
+	/**
+	 * The username of the user
+	 */
+	username: string;
 }
 
 /**
@@ -37,9 +113,17 @@ export enum Reference {
  * The error of a request
  */
 export interface RequestError {
-	type: "error";
+	/**
+	 * The error of the request
+	 */
 	error: {
+		/**
+		 * The error code
+		 */
 		code: number;
+		/**
+		 * The error message
+		 */
 		message: string;
 	};
 }
@@ -104,14 +188,4 @@ export interface Response {
 	 * The status code of the response
 	 */
 	statusCode: number;
-}
-
-/**
- * A user in the REST API
- */
-export interface User {
-	username: string;
-	credits: number;
-	ships: any[];
-	loans: any[];
 }

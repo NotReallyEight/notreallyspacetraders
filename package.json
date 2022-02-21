@@ -2,13 +2,12 @@
   "name": "notreallyspacetraders",
   "version": "0.0.1",
   "description": "An open source API wrapper for Spacetraders API.",
-  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "lint": "eslint src --fix",
     "prepare": "npm test",
     "prettier": "prettier --write src/**/*.ts",
-    "test": "npm run lint && npm run prettier && npm run build"
+    "test": "npm run lint && npm run prettier && tsc --noEmit"
   },
   "repository": {
     "type": "git",

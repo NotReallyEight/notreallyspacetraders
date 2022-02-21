@@ -1,18 +1,30 @@
 import EventEmitter from "node:events";
 import { Rest } from "./rest/Rest";
-import type { ClaimUsernameResponse, GameStatus, RequestError } from "./types";
+import type {
+	ClaimUsernameResponse,
+	ClientOptions,
+	GameStatus,
+	GetUser,
+	GetUserUser,
+	RequestError,
+} from "./types";
 
 /**
  * The client class
  */
 export class Client extends EventEmitter {
+	token?: string;
 	/**
 	 * The REST handler of the client
 	 */
 	rest: Rest;
 
-	constructor() {
+	/**
+	 * @param options - The options of the client
+	 */
+	constructor(options: ClientOptions) {
 		super();
+		this.token = options.token;
 		this.rest = new Rest(this);
 	}
 
@@ -30,12 +42,36 @@ export class Client extends EventEmitter {
 
 		const data = JSON.parse(req.data) as ClaimUsernameResponse | RequestError;
 
-		if (data.type === "error")
+		if ("error" in data)
 			throw new Error(
 				`Request exited with code ${data.error.code}: ${data.error.message}`
 			);
 
 		return data;
+	}
+
+	/**
+	 * Gets an account's information
+	 * @param token - The token of the user
+	 * @returns The user's information, or null if the user is not found
+	 */
+	async getAccount(token = this.token): Promise<GetUserUser | null> {
+		if (token === undefined) throw new Error("No token provided.");
+
+		const req = await this.rest.get({
+			url: "/my/account",
+			headers: {
+				Authorization: token.startsWith("Bearer ") ? token : `Bearer ${token}`,
+			},
+		});
+
+		if (req.data == null) return null;
+
+		const data = JSON.parse(req.data) as GetUser | RequestError;
+
+		if ("error" in data) throw new Error(data.error.message);
+
+		return data.user;
 	}
 
 	/**

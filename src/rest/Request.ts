@@ -3,6 +3,13 @@ import { request } from "https";
 import type { Client } from "../Client";
 import type { Json, RequestMethod, RequestOptions, Response } from "../types";
 import { RequestStatus, Reference } from "../types";
+import { join } from "node:path";
+const { name, version } = require(join(
+	__dirname,
+	"..",
+	"..",
+	"package.json"
+)) as { [key: string]: any; name: string; version: string };
 
 /**
  * A request to the REST API
@@ -44,6 +51,7 @@ export class Request {
 		this.headers = {
 			...options.headers,
 			"Content-Type": "application/json",
+			"User-Agent": `${name}/${version}`,
 		};
 		this.method = method;
 		this.url = options.url;
@@ -88,6 +96,7 @@ export class Request {
 				path: this.url.startsWith("/") ? this.url : `/${this.url}`,
 				hostname: Reference.baseUrl,
 				method: this.method,
+				headers: this.headers,
 			},
 			(res) => {
 				res.on("data", (d: string) => {
