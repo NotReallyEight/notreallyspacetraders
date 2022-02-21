@@ -1,0 +1,11 @@
+{
+  "entryPoints": ["./src/index.ts", "./src/types.ts"],
+  "out": "./docs",
+  "tsconfig": "./tsconfig.json",
+  "readme": "./README.md",
+  "name": "NotReallySpaceTraders",
+  "excludeNotDocumented": true,
+  "validation": {
+    "notDocumented": true
+  }
+}
