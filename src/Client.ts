@@ -3,6 +3,7 @@ import type {
 	ClaimUsernameResponse,
 	ClientOptions,
 	GameStatus,
+	GetAvailableLoans,
 	GetUser,
 	GetUserUser,
 	RequestError,
@@ -70,6 +71,28 @@ export class Client {
 		if ("error" in data) throw new Error(data.error.message);
 
 		return data.user;
+	}
+
+	/**
+	 * Get the available loans
+	 * @param token - The token of the user
+	 * @returns - The available loans
+	 */
+	async getAvailableLoans(
+		token = this.token
+	): Promise<GetAvailableLoans | null> {
+		const req = await this.rest.get({
+			url: "/types/loans",
+			headers: {
+				Authorization: token != null ? `Bearer ${token}` : undefined,
+			},
+		});
+
+		if (req.data == null) return null;
+
+		const data = JSON.parse(req.data) as GetAvailableLoans;
+
+		return data;
 	}
 
 	/**

@@ -58,6 +58,10 @@ export interface GameStatus {
 	status: string;
 }
 
+export interface GetAvailableLoans {
+	loans: Loan[];
+}
+
 /**
  * The response to a getUser endpoint request
  */
@@ -98,6 +102,14 @@ export interface GetUserUser {
  * A JSON object
  */
 export type Json = Json[] | boolean | number | string | { [key: string]: Json };
+
+export interface Loan {
+	amount: number;
+	collateralRequired: boolean;
+	rate: number;
+	termInDays: number;
+	type: string;
+}
 
 /**
  * A reference to a REST resource
