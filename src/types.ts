@@ -2,6 +2,27 @@ import type { IncomingHttpHeaders, OutgoingHttpHeaders } from "node:http2";
 import type { Client } from "./Client";
 import type { Request } from "./rest/Request";
 
+export interface APIErrorResponse {
+	message: string;
+	code: number;
+	data?: any;
+}
+
+export interface APIErrorOptions {
+	error: APIErrorResponse;
+}
+
+/**
+ * Loan information when getting available loans
+ */
+export interface AvailableLoan {
+	amount: number;
+	collateralRequired: boolean;
+	rate: number;
+	termInDays: number;
+	type: string;
+}
+
 /**
  * The options for the client class
  */
@@ -59,7 +80,7 @@ export interface GameStatus {
 }
 
 export interface GetAvailableLoans {
-	loans: Loan[];
+	loans: AvailableLoan[];
 }
 
 /**
