@@ -124,11 +124,14 @@ export interface GetUserUser {
  */
 export type Json = Json[] | boolean | number | string | { [key: string]: Json };
 
+/**
+ * A loan
+ */
 export interface Loan {
-	amount: number;
-	collateralRequired: boolean;
-	rate: number;
-	termInDays: number;
+	due: string;
+	id: string;
+	repaymentAmount: number;
+	status: string;
 	type: string;
 }
 
@@ -221,4 +224,12 @@ export interface Response {
 	 * The status code of the response
 	 */
 	statusCode: number;
+}
+
+/**
+ * The response of the takeOutLoan endpoint request
+ */
+export interface TakeOutLoan {
+	credits: number;
+	loan: Loan;
 }

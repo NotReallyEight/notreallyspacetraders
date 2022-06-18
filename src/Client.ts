@@ -7,6 +7,7 @@ import type {
 	GetUser,
 	GetUserUser,
 	RequestError,
+	TakeOutLoan,
 } from "./types";
 
 /**
@@ -106,8 +107,43 @@ export class Client {
 
 		if (req.data == null) return null;
 
-		const data = JSON.parse(req.data) as GameStatus;
+		const data = JSON.parse(req.data) as GameStatus | RequestError;
+
+		if ("error" in data)
+			throw new APIError(
+				`Request exited with code ${data.error.code}: ${data.error.message}`,
+				data
+			);
 
 		return data.status;
+	}
+
+	/**
+	 * Take out a loan
+	 * @param token - The token of the user
+	 * @returns - The loan taken out
+	 */
+	async takeOutLoan(token = this.token): Promise<TakeOutLoan | null> {
+		const req = await this.rest.post({
+			url: `/my/loans`,
+			headers: {
+				Authorization: token != null ? `Bearer ${token}` : undefined,
+			},
+			body: {
+				type: "STARTUP",
+			},
+		});
+
+		if (req.data == null) return null;
+
+		const data = JSON.parse(req.data) as RequestError | TakeOutLoan;
+
+		if ("error" in data)
+			throw new APIError(
+				`Request exited with code ${data.error.code}: ${data.error.message}`,
+				data
+			);
+
+		return data;
 	}
 }
