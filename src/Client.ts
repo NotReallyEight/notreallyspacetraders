@@ -1,3 +1,4 @@
+import { APIError } from "./rest/APIError";
 import { Rest } from "./rest/Rest";
 import type {
 	ClaimUsernameResponse,
@@ -43,8 +44,9 @@ export class Client {
 		const data = JSON.parse(req.data) as ClaimUsernameResponse | RequestError;
 
 		if ("error" in data)
-			throw new Error(
-				`Request exited with code ${data.error.code}: ${data.error.message}`
+			throw new APIError(
+				`Request exited with code ${data.error.code}: ${data.error.message}`,
+				data
 			);
 
 		return data;
@@ -69,7 +71,11 @@ export class Client {
 
 		const data = JSON.parse(req.data) as GetUser | RequestError;
 
-		if ("error" in data) throw new Error(data.error.message);
+		if ("error" in data)
+			throw new APIError(
+				`Request exited with code ${data.error.code}: ${data.error.message}`,
+				data
+			);
 
 		return data.user;
 	}
@@ -91,7 +97,13 @@ export class Client {
 
 		if (req.data == null) return null;
 
-		const data = JSON.parse(req.data) as GetAvailableLoans;
+		const data = JSON.parse(req.data) as GetAvailableLoans | RequestError;
+
+		if ("error" in data)
+			throw new APIError(
+				`Request exited with code ${data.error.code}: ${data.error.message}`,
+				data
+			);
 
 		return data;
 	}
