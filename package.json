@@ -7,8 +7,9 @@
     "lint": "eslint src --fix",
     "prepare": "npm test",
     "prettier": "prettier --write src/**/*.ts --cache",
-    "test": "npm run lint && npm run prettier && tsc --noEmit",
-    "document": "typedoc --options typedoc.json"
+    "test": "npm run lint && npm run prettier && tsc --noEmit && npm run jest",
+    "document": "typedoc --options typedoc.json",
+    "jest": "jest"
   },
   "repository": {
     "type": "git",
