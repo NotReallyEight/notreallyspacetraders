@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [main]
 env:
-  TOKEN: ${{secrets.API_TOKEN}}
+  API_TOKEN: ${{secrets.API_TOKEN}}
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -19,6 +19,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+      - run: echo $API_TOKEN
+      - run: echo ${{secrets.API_TOKEN}}
       - run: cd tests && npm ci
       - run: npm ci
       - run: npm run test
