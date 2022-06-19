@@ -3,8 +3,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-console.log(process.env);
-
 const client = new Client({
 	token: process.env.API_TOKEN,
 });
