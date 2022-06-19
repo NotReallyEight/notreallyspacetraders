@@ -5,6 +5,7 @@ import type {
 	ClientOptions,
 	GameStatus,
 	GetAvailableLoans,
+	GetSystemAvailableShips,
 	GetUser,
 	GetUserUser,
 	RequestError,
@@ -128,6 +129,36 @@ export class Client {
 			);
 
 		return data.status;
+	}
+
+	/**
+	 * Get a list of all available ships in the system.
+	 * @param systemSymbol - Symbol of the system you want to get flightPlans for
+	 * @param token - The token of the user
+	 * @returns - The list of all available ships in the system
+	 */
+	async getSystemAvailableShips(
+		systemSymbol: string,
+		token = this.token
+	): Promise<GetSystemAvailableShips | null> {
+		const req = await this.rest.get({
+			url: `/systems/${systemSymbol}/ship-listings`,
+			headers: {
+				Authorization: token != null ? `Bearer ${token}` : undefined,
+			},
+		});
+
+		if (req.data == null) return null;
+
+		const data = JSON.parse(req.data) as GetSystemAvailableShips | RequestError;
+
+		if ("error" in data)
+			throw new APIError(
+				`Request exited with code ${data.error.code}: ${data.error.message}`,
+				data
+			);
+
+		return data;
 	}
 
 	/**
