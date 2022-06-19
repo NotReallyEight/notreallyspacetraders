@@ -8,3 +8,5 @@ testing/
 private.config.ts
 # Documentation
 docs/
+# Environment variables
+.env
