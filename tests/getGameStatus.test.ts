@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const client = new Client({
-	token: process.env.TOKEN,
+	token: process.env.API_TOKEN,
 });
 
 test("Get Game Status", async () => {
