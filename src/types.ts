@@ -84,6 +84,13 @@ export interface GetAvailableLoans {
 }
 
 /**
+ * Represents the response to the getSystemAvailableShips endpoint of the REST API
+ */
+export interface GetSystemAvailableShips {
+	shipListings: ShipListing[];
+}
+
+/**
  * The response to a getUser endpoint request
  */
 export interface GetUser {
@@ -133,6 +140,15 @@ export interface Loan {
 	repaymentAmount: number;
 	status: string;
 	type: string;
+}
+
+/**
+ * A purchase location
+ */
+export interface PurchaseLocation {
+	location: string;
+	price: number;
+	system: string;
 }
 
 /**
@@ -224,6 +240,17 @@ export interface Response {
 	 * The status code of the response
 	 */
 	statusCode: number;
+}
+
+export interface ShipListing {
+	class: string;
+	manufacturer: string;
+	maxCargo: number;
+	plating: number;
+	purchaseLocations: PurchaseLocation[];
+	speed: number;
+	type: string;
+	weapons: number;
 }
 
 /**
